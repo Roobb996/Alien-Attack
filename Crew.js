@@ -13,3 +13,14 @@ if (this.cooldown === 0) {
     projectiles.push(new Projectile(this.x, this.y, closest));
     this.cooldown = Math.floor(fireRate);
 }
+// In crew.js
+gainXP(amount) {
+    this.xp += amount;
+    if (this.xp >= 100 * this.level) {
+        this.xp -= 100 * this.level; // Reset XP per il nuovo livello
+        this.level++;
+        this.bonusEfficiency = 0.1 * this.level;
+    }
+    // Chiamata per aggiornare la UI
+    updateUI(); 
+}
