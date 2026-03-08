@@ -71,3 +71,10 @@ function enemyKilled(enemy) {
         myTurret.crew.gainXP(20);
     }
 }
+function updateUI() {
+    if (myTurret.crew) {
+        document.getElementById('crew-level').innerText = myTurret.crew.level;
+        document.getElementById('crew-xp').innerText = myTurret.crew.xp;
+        document.getElementById('crew-eff').innerText = (1 + myTurret.crew.bonusEfficiency).toFixed(1);
+    }
+}
