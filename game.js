@@ -1,58 +1,63 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// --- Variabili Globali ---
 let wave = 1;
 let crewXP = 0;
+let enemies = [new Enemy()];
+let projectiles = [];
+let myTurret = new Turret(400, 300);
 
+// --- Funzione di Aggiornamento Principale ---
 function update() {
-    // Qui aggiorneremo posizioni nemici, fuoco torrette, ecc.
+    // 1. Gestione Nemici
+    enemies.forEach((enemy, index) => {
+        enemy.update();
+        if (enemy.targetIndex >= path.length) {
+            enemies.splice(index, 1);
+        }
+    });
+
+    // 2. Gestione Torretta (passiamo nemici e array proiettili)
+    myTurret.update(enemies, projectiles);
+
+    // 3. Gestione Proiettili
+    projectiles.forEach((p, i) => {
+        p.update();
+        if (!p.active) {
+            projectiles.splice(i, 1);
+        }
+    });
+    
+    // 4. Rimozione nemici morti
+    enemies = enemies.filter(e => e.health > 0);
 }
 
+// --- Funzione di Disegno ---
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // Disegna torrette e nemici
+    
+    // Disegna nemici
+    enemies.forEach(e => e.draw(ctx));
+    
+    // Disegna torretta
+    myTurret.draw(ctx);
+    
+    // Disegna proiettili
+    projectiles.forEach(p => {
+        ctx.fillStyle = 'yellow';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+    });
 }
 
+// --- Loop del Gioco ---
 function gameLoop() {
     update();
     draw();
     requestAnimationFrame(gameLoop);
 }
 
+// Avvio
 gameLoop();
-// In game.js
-let enemies = [new Enemy()]; // Iniziamo con un nemico
-
-function update() {
-    enemies.forEach((enemy, index) => {
-        enemy.update();
-        if (enemy.targetIndex >= path.length) {
-            enemies.splice(index, 1); // Rimosso se raggiunge la fine
-        }
-    });
-}
-
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    enemies.forEach(e => e.draw(ctx));
-}
-// Inizializza la torretta (posizionata al centro del campo)
-let myTurret = new Turret(400, 300);
-
-function update() {
-    // Aggiorna nemici
-    enemies.forEach((enemy, index) => {
-        enemy.update();
-        if (enemy.targetIndex >= path.length) enemies.splice(index, 1);
-    });
-
-    // Aggiorna torretta passando la lista nemici
-    myTurret.update(enemies);
-}
-
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // Disegna percorso (opzionale, utile per debug)
-    enemies.forEach(e => e.draw(ctx));
-    myTurret.draw(ctx);
-}
