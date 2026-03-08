@@ -20,3 +20,19 @@ function gameLoop() {
 }
 
 gameLoop();
+// In game.js
+let enemies = [new Enemy()]; // Iniziamo con un nemico
+
+function update() {
+    enemies.forEach((enemy, index) => {
+        enemy.update();
+        if (enemy.targetIndex >= path.length) {
+            enemies.splice(index, 1); // Rimosso se raggiunge la fine
+        }
+    });
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    enemies.forEach(e => e.draw(ctx));
+}
