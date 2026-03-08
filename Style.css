@@ -10,7 +10,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* FIX: min-height invece di height per sicurezza */
+    min-height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: white;
 }
@@ -34,10 +34,8 @@ canvas {
     padding: 15px;
     border-radius: 8px;
     border: 1px solid #7f8c8d;
-    /* FIX: rimosso pointer-events: none — bloccava i click sul #pause-btn */
 }
 
-/* FIX: pointer-events: none applicato solo all'overlay testuale, non al contenitore */
 #ui-container .info-display {
     pointer-events: none;
 }
@@ -46,10 +44,6 @@ canvas {
     margin-bottom: 10px;
     color: #f1c40f;
 }
-
-/* FIX: rimossa .entity con position: absolute — inutile per elementi canvas
-   Tienila solo se usi elementi HTML sovrapposti al canvas */
-/* .entity { position: absolute; } */
 
 #pause-btn {
     margin-top: 10px;
