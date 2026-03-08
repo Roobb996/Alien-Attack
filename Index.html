@@ -3,32 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Defense Roguelite - Gioco di difesa a ondate">
     <title>Defense Roguelite</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container">
-
-        <!-- UI principale: statistiche e controlli -->
         <div id="ui-container">
             <h3>Equipaggio</h3>
-            <p>Livello: <span id="crew-level">1</span></p>
-            <p>XP: <span id="crew-xp">0</span> / 100</p>
-            <p>Efficienza: <span id="crew-eff">1.0</span>x</p>
-            <hr>
-            <p>Ondata attuale: <span id="wave-count">1</span></p>
-            <p>Vita Base: <span id="base-health">100</span></p>
-            <button id="pause-btn" onclick="togglePause()">Pausa / Riprendi</button>
+            <!-- FIX: classe info-display per pointer-events: none mirato -->
+            <div class="info-display">
+                <p>Livello: <span id="crew-level">1</span></p>
+                <p>XP: <span id="crew-xp">0</span> / 100</p>
+                <p>Efficienza: <span id="crew-eff">1.0</span>x</p>
+                <hr>
+                <p>Ondata attuale: <span id="wave-count">1</span></p>
+                <p>Vita Base: <span id="base-health">100</span></p>
+            </div>
+            <!-- FIX: rimosso onclick inline, gestito in game.js -->
+            <button id="pause-btn">Pausa / Riprendi</button>
         </div>
-
-        <!-- Canvas di gioco -->
         <canvas id="gameCanvas" width="800" height="600"></canvas>
-
     </div>
-
-    <script src="entities.js"></script>
-    <script src="projectiles.js"></script>
-    <script src="crew.js"></script>
-    <script src="game.js"></script>
+    <!-- FIX: aggiunto defer per garantire che il DOM sia pronto -->
+    <script src="entities.js" defer></script>
+    <script src="projectiles.js" defer></script>
+    <script src="crew.js" defer></script>
+    <script src="game.js" defer></script>
 </body>
 </html>
