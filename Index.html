@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Defender - Survival Roguelite</title>
+    <style>
+        body { margin: 0; background: #1a1a1a; color: #00ffcc; font-family: 'Courier New', Courier, monospace; overflow: hidden; }
+        #ui-layer { position: absolute; top: 10px; left: 10px; pointer-events: none; }
+        .stat { font-size: 20px; font-weight: bold; text-shadow: 2px 2px #000; }
+    </style>
+</head>
+<body>
+    <div id="ui-layer">
+        <div class="stat">CORE INTEGRITY: <span id="hp">100%</span></div>
+        <div class="stat">SCRAP: <span id="scrap">0</span></div>
+        <div class="stat">WAVE: <span id="wave">1</span></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
