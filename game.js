@@ -61,3 +61,13 @@ function gameLoop() {
 
 // Avvio
 gameLoop();
+// Inizializzazione
+let myCrew = new Crew("Comandante Alpha");
+myTurret.assignCrew(myCrew); 
+
+// Esempio: quando un nemico muore, il comandante guadagna XP
+function enemyKilled(enemy) {
+    if (myTurret.crew) {
+        myTurret.crew.gainXP(20);
+    }
+}
