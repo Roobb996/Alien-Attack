@@ -22,6 +22,9 @@ function enemyKilled(enemy) {
 }
 
 function updateUI() {
+    // Ondata: wave viene incrementata all'inizio di startNextWave, quindi -1 per mostrare quella corrente
+    document.getElementById('wave-count').innerText = wave - 1;
+
     if (myTurret.crew) {
         document.getElementById('crew-level').innerText = myTurret.crew.level;
         document.getElementById('crew-xp').innerText = myTurret.crew.xp;
@@ -46,6 +49,7 @@ function startNextWave() {
 
     enemiesToSpawn += 2;
     wave++;
+    updateUI(); // Aggiorna il contatore ondata nell'HTML
 }
 
 // --- Funzione di Aggiornamento Principale ---
