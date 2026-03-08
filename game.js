@@ -97,3 +97,22 @@ function fireBullet(scene, turret, target) {
     let b = bullets.create(turret.x, turret.y, null);
     scene.physics.moveToObject(b, target, 300);
 }
+
+class CrewMember {
+    constructor(name, type) {
+        this.name = name;
+        this.type = type; // 'soldier', 'engineer', 'scientist'
+        this.level = 1;
+        this.experience = 0;
+        this.assignedTo = null; // ID della torretta a cui è assegnato
+    }
+
+    getBonus() {
+        if (this.type === 'soldier') return 0.5 * this.level; // Riduce il cooldown
+        if (this.type === 'engineer') return 2 * this.level;  // HP riparati al secondo
+        return 0;
+    }
+}
+
+let myCrew = []; // La tua squadra totale
+let recruitmentPool = []; // Membri disponibili da assumere
