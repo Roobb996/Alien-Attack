@@ -2,34 +2,43 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Core Defender - Survival Roguelite</title>
     <style>
         body { margin: 0; background: #1a1a1a; color: #00ffcc; font-family: 'Courier New', Courier, monospace; overflow: hidden; }
-        #ui-layer { position: absolute; top: 10px; left: 10px; pointer-events: none; }
+        #ui-layer { position: absolute; top: 10px; left: 10px; pointer-events: none; z-index: 10; }
+        #crew-menu { position: absolute; right: 10px; top: 10px; background: rgba(0,0,0,0.7); padding: 10px; border: 1px solid #00ffcc; z-index: 10; pointer-events: auto; }
         .stat { font-size: 20px; font-weight: bold; text-shadow: 2px 2px #000; }
+        
+        /* Upgrade Menu Overlay */
+        #upgrade-menu { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); flex-direction: column; align-items: center; justify-content: center; z-index: 100; pointer-events: auto; }
+        .card { background: #222; border: 2px solid #00ffcc; padding: 20px; width: 200px; cursor: pointer; text-align: center; color: white; }
+        .card:hover { border-color: #fff; background: #333; }
     </style>
 </head>
 <body>
+
     <div id="ui-layer">
         <div class="stat">CORE INTEGRITY: <span id="hp">100%</span></div>
         <div class="stat">SCRAP: <span id="scrap">0</span></div>
         <div class="stat">WAVE: <span id="wave">1</span></div>
     </div>
+
+    <div id="crew-menu">
+        <h3>RECLUTAMENTO</h3>
+        <button onclick="recruit('soldier')">Assumi Soldato (30 Scrap)</button><br>
+        <button onclick="recruit('engineer')">Assumi Ingegnere (40 Scrap)</button>
+        <hr>
+        <h3>SQUADRA</h3>
+        <div id="crew-list"></div>
+    </div>
+
+    <div id="upgrade-menu">
+        <h1 style="color: #00ffcc;">SCEGLI UN POTENZIAMENTO</h1>
+        <div id="cards-container" style="display: flex; gap: 20px;"></div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
     <script src="game.js"></script>
 </body>
 </html>
-<div id="crew-menu" style="position: absolute; right: 10px; top: 10px; background: rgba(0,0,0,0.7); padding: 10px; border: 1px solid #00ffcc;">
-    <h3>RECLUTAMENTO</h3>
-    <button onclick="recruit('soldier')">Assumi Soldato (30 Scrap)</button><br>
-    <button onclick="recruit('engineer')">Assumi Ingegnere (40 Scrap)</button>
-    <hr>
-    <h3>SQUADRA</h3>
-    <div id="crew-list"></div>
-</div>
-<div id="upgrade-menu" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); flex-direction: column; align-items: center; justify-content: center; z-index: 100;">
-    <h1 style="color: #00ffcc;">SCEGLI UN POTENZIAMENTO</h1>
-    <div id="cards-container" style="display: flex; gap: 20px;">
-        </div>
-</div>
