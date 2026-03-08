@@ -2,43 +2,28 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Defense Roguelite</title>
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="game-ui">
-        <h1>Ondata: <span id="wave">1</span></h1>
-        <div id="stats">XP Personale: <span id="crew-xp">0</span></div>
-    </div>
-    <canvas id="gameCanvas"></canvas>
-
-    <script src="entities.js"></script>
-    <script src="game.js"></script>
-</body>
-</html>
-<div id="ui-container" style="position: absolute; top: 10px; left: 10px; color: white; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; font-family: sans-serif;">
-    <h3>Statistiche Equipaggio</h3>
-    <p>Livello: <span id="crew-level">1</span></p>
-    <p>XP: <span id="crew-xp">0</span> / 100</p>
-    <p>Efficienza: <span id="crew-eff">1.0</span>x</p>
-</div>
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
-    <title>Defense Roguelite</title>
 </head>
 <body>
     <div id="game-container">
+
+        <!-- UI principale: statistiche e controlli -->
         <div id="ui-container">
             <h3>Equipaggio</h3>
             <p>Livello: <span id="crew-level">1</span></p>
-            <p>XP: <span id="crew-xp">0</span></p>
+            <p>XP: <span id="crew-xp">0</span> / 100</p>
             <p>Efficienza: <span id="crew-eff">1.0</span>x</p>
+            <hr>
+            <p>Ondata attuale: <span id="wave-count">1</span></p>
+            <p>Vita Base: <span id="base-health">100</span></p>
+            <button id="pause-btn" onclick="togglePause()">Pausa / Riprendi</button>
         </div>
-        
+
+        <!-- Canvas di gioco -->
         <canvas id="gameCanvas" width="800" height="600"></canvas>
+
     </div>
 
     <script src="entities.js"></script>
@@ -47,6 +32,3 @@
     <script src="game.js"></script>
 </body>
 </html>
-<p>Ondata attuale: <span id="wave-count">1</span></p>
-<p>Vita Base: <span id="base-health">100</span></p>
-<button id="pause-btn" onclick="togglePause()">Pausa / Riprendi</button>
