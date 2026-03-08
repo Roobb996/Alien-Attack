@@ -6,6 +6,29 @@ class Turret {
         this.level = 1;
     }
 }
+class Turret {
+    // ... (costruttore esistente)
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.range = 200;
+        this.cooldown = 0; // Contatore per il ricaricamento
+    }
+
+    update(enemies, projectiles) {
+        if (this.cooldown > 0) this.cooldown--;
+
+        let closest = enemies.find(e => {
+            let dist = Math.hypot(e.x - this.x, e.y - this.y);
+            return dist < this.range;
+        });
+
+        if (closest && this.cooldown === 0) {
+            projectiles.push(new Projectile(this.x, this.y, closest));
+            this.cooldown = 60; // 60 frame di pausa
+        }
+    }
+}
 
 class Crew {
     constructor() {
