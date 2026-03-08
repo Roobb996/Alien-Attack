@@ -5,6 +5,8 @@ const ctx = canvas.getContext('2d');
 let wave = 1;
 let enemiesToSpawn = 5;
 let isSpawning = false;
+let isGameOver = false;
+let baseHealth = 100;
 let enemies = [];
 let projectiles = [];
 let myTurret = new Turret(400, 300);
@@ -24,12 +26,20 @@ function enemyKilled(enemy) {
 function updateUI() {
     // Ondata: wave viene incrementata all'inizio di startNextWave, quindi -1 per mostrare quella corrente
     document.getElementById('wave-count').innerText = wave - 1;
+    document.getElementById('base-health').innerText = baseHealth;
 
     if (myTurret.crew) {
         document.getElementById('crew-level').innerText = myTurret.crew.level;
         document.getElementById('crew-xp').innerText = myTurret.crew.xp;
         document.getElementById('crew-eff').innerText = (1 + myTurret.crew.bonusEfficiency).toFixed(1);
     }
+}
+
+// --- Game Over ---
+function gameOver() {
+    isGameOver = true;
+    alert("Game Over! La tua difesa è crollata. Ondata raggiunta: " + (wave - 1));
+    location.reload();
 }
 
 // --- Gestione Ondate ---
@@ -58,7 +68,12 @@ function update() {
     enemies.forEach((enemy, index) => {
         enemy.update();
         if (enemy.targetIndex >= path.length) {
+            baseHealth -= 10;
             enemies.splice(index, 1);
+            updateUI();
+            if (baseHealth <= 0) {
+                gameOver();
+            }
         }
     });
 
@@ -101,17 +116,21 @@ function draw() {
         ctx.fill();
     });
 
-    // HUD: numero ondata
+    // HUD: numero ondata e vita base
     ctx.fillStyle = 'white';
     ctx.font = '16px monospace';
-    ctx.fillText(`Ondata: ${wave}`, 10, 20);
+    ctx.fillText(`Ondata: ${wave - 1}`, 10, 20);
+    ctx.fillStyle = baseHealth > 30 ? 'lime' : 'red';
+    ctx.fillText(`Base: ${baseHealth} HP`, 10, 40);
 }
 
 // --- Loop del Gioco ---
 function gameLoop() {
-    update();
-    draw();
-    requestAnimationFrame(gameLoop);
+    if (!isGameOver) {
+        update();
+        draw();
+        requestAnimationFrame(gameLoop);
+    }
 }
 
 // --- Avvio ---
