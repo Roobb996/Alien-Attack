@@ -6,6 +6,7 @@ let wave = 1;
 let enemiesToSpawn = 5;
 let isSpawning = false;
 let isGameOver = false;
+let isPaused = false;
 let baseHealth = 100;
 let enemies = [];
 let projectiles = [];
@@ -59,6 +60,12 @@ function startNextWave() {
 
     enemiesToSpawn += 2;
     wave++;
+
+    // Ogni 5 ondate aumenta la velocità base dei nemici
+    if (wave % 5 === 0) {
+        Enemy.prototype.speed += 0.2;
+    }
+
     updateUI(); // Aggiorna il contatore ondata nell'HTML
 }
 
@@ -124,8 +131,21 @@ function draw() {
     ctx.fillText(`Base: ${baseHealth} HP`, 10, 40);
 }
 
+// --- Pausa ---
+function togglePause() {
+    isPaused = !isPaused;
+    const btn = document.getElementById('pause-btn');
+    btn.innerText = isPaused ? "Riprendi Gioco" : "Pausa";
+
+    // Se stiamo riprendendo, rilanciamo il loop
+    if (!isPaused) {
+        requestAnimationFrame(gameLoop);
+    }
+}
+
 // --- Loop del Gioco ---
 function gameLoop() {
+    if (isPaused) return; // Esce se in pausa
     if (!isGameOver) {
         update();
         draw();
