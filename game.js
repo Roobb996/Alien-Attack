@@ -78,3 +78,15 @@ function updateUI() {
         document.getElementById('crew-eff').innerText = (1 + myTurret.crew.bonusEfficiency).toFixed(1);
     }
 }
+let wave = 1;
+let enemiesToSpawn = 5;
+
+function spawnWave() {
+    for (let i = 0; i < enemiesToSpawn; i++) {
+        setTimeout(() => {
+            enemies.push(new Enemy());
+        }, i * 1000); // Un nemico al secondo
+    }
+    enemiesToSpawn += 2; // Più nemici alla prossima ondata
+    wave++;
+}
