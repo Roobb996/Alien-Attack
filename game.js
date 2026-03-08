@@ -1,3 +1,15 @@
+let wave = 1;
+let enemiesToSpawn = 5;
+let enemiesLeft = 5;
+let waveActive = true;
+let difficultyMultiplier = 1.0;
+let staff = {
+    level: 1,
+    xp: 0,
+    xpToNextLevel: 100,
+    fireRateBonus: 1.0
+};
+
 const config = {
     type: Phaser.AUTO,
     width: window.innerWidth,
@@ -116,3 +128,140 @@ class CrewMember {
 
 let myCrew = []; // La tua squadra totale
 let recruitmentPool = []; // Membri disponibili da assumere
+function recruit(type) {
+    let cost = (type === 'soldier') ? 30 : 40;
+    if (scrap >= cost) {
+        scrap -= cost;
+        let newMember = new CrewMember("Recruit " + (myCrew.length + 1), type);
+        myCrew.push(newMember);
+        updateUI();
+        spawnCrewSprite(newMember); // Crea l'icona trascinabile nel gioco
+    }
+}
+
+function spawnCrewSprite(member) {
+    // Crea un piccolo cerchio colorato che rappresenta il membro
+    let color = (member.type === 'soldier') ? 0xff0000 : 0xffff00;
+    let sprite = game.scene.scenes[0].add.circle(50, 500, 15, color).setInteractive();
+    
+    // Rendi l'icona trascinabile
+    game.scene.scenes[0].input.setDraggable(sprite);
+
+    sprite.on('drag', (pointer, dragX, dragY) => {
+        sprite.x = dragX;
+        sprite.y = dragY;
+    });
+
+    sprite.on('dragend', (pointer) => {
+        // Controlla se è sopra una torretta
+        let targetTurret = getTurretAt(sprite.x, sprite.y);
+        if (targetTurret) {
+            targetTurret.operator = member;
+            member.assignedTo = targetTurret;
+            sprite.x = targetTurret.x;
+            sprite.y = targetTurret.y - 30; // Si posiziona sopra la torretta
+        }
+    });
+}
+
+function getTurretAt(x, y) {
+    return turrets.getChildren().find(t => Phaser.Math.Distance.Between(x, y, t.x, t.y) < 40);
+}
+// Dentro update(), nella sezione torrette:
+turrets.getChildren().forEach(t => {
+    let closest = getClosestEnemy(t, 200);
+    
+    // Calcola il cooldown: base 1000ms, ridotto se c'è un soldato
+    let cooldown = 1000;
+    if (t.operator && t.operator.type === 'soldier') {
+        cooldown -= (t.operator.getBonus() * 100); 
+    }
+
+    if (closest && this.time.now > t.nextFire) {
+        fireBullet(this, t, closest);
+        t.nextFire = this.time.now + cooldown;
+    }
+});
+// Funzione chiamata quando un proiettile colpisce un nemico
+function handleEnemyDeath(enemy) {
+    enemy.destroy();
+    scrap += 5 * difficultyMultiplier; // Guadagni rottami
+    enemiesLeft--;
+
+    // Guadagno XP per il personale
+    staff.xp += 10;
+    if (staff.xp >= staff.xpToNextLevel) {
+        levelUpStaff();
+    }
+
+    updateUI();
+
+    // Controllo se l'ondata è finita
+    if (enemiesLeft <= 0) {
+        endWave();
+    }
+}
+
+function levelUpStaff() {
+    staff.level++;
+    staff.xp = 0;
+    staff.xpToNextLevel *= 1.5; // Ogni livello è più difficile
+    staff.fireRateBonus *= 1.1; // Il personale diventa più veloce a sparare
+    console.log("Personale livellato! Livello: " + staff.level);
+    // Qui potremmo aprire il menu dei potenziamenti (Roguelite cards)
+}
+
+function startNextWave() {
+    wave++;
+    difficultyMultiplier += 0.2; // Aumenta la difficoltà del 20%
+    enemiesToSpawn = Math.floor(5 * wave * difficultyMultiplier);
+    enemiesLeft = enemiesToSpawn;
+    waveActive = true;
+    
+    console.log(`Inizio Ondata ${wave}! Nemici: ${enemiesToSpawn}`);
+    
+    // Timer per spawnare i nemici uno alla volta
+    let spawned = 0;
+    let spawnTimer = game.scene.scenes[0].time.addEvent({
+        delay: 1000 / difficultyMultiplier, // Spawnano più velocemente
+        callback: () => {
+            spawnEnemy(difficultyMultiplier);
+            spawned++;
+            if (spawned >= enemiesToSpawn) spawnTimer.remove();
+        },
+        loop: true
+    });
+}
+
+function endWave() {
+    waveActive = false;
+    console.log("Ondata completata! Preparati per la prossima.");
+    // Bonus di fine ondata
+    scrap += 50 * wave;
+    updateUI();
+    
+    // Pausa di 5 secondi prima della prossima ondata
+    setTimeout(startNextWave, 5000);
+}
+const upgrades = [
+    {
+        name: "Mura Rinforzate",
+        description: "+50 HP Massimi al Core",
+        effect: () => { maxHp += 50; hp += 50; }
+    },
+    {
+        name: "Cadenza di Fuoco",
+        description: "Le torrette sparano il 20% più velocemente",
+        effect: () => { turretFireRate *= 0.8; } // Ridurre il delay significa sparare più veloci
+    },
+    {
+        name: "Munizioni Pesanti",
+        description: "+25% Danno proiettili",
+        effect: () => { bulletDamage *= 1.25; }
+    },
+    {
+        name: "Riciclo Rapido",
+        description: "+2 Scrap per ogni nemico ucciso",
+        effect: () => { scrapBonus += 2; }
+    }
+];
