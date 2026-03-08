@@ -36,3 +36,23 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     enemies.forEach(e => e.draw(ctx));
 }
+// Inizializza la torretta (posizionata al centro del campo)
+let myTurret = new Turret(400, 300);
+
+function update() {
+    // Aggiorna nemici
+    enemies.forEach((enemy, index) => {
+        enemy.update();
+        if (enemy.targetIndex >= path.length) enemies.splice(index, 1);
+    });
+
+    // Aggiorna torretta passando la lista nemici
+    myTurret.update(enemies);
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Disegna percorso (opzionale, utile per debug)
+    enemies.forEach(e => e.draw(ctx));
+    myTurret.draw(ctx);
+}
